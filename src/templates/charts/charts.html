@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="col-lg-8 offset-lg-2 mt-4">
+        <a class="btn btn-primary mt-2" href="{% url 'home' %}">Search Again</a>
+        <div id="comment" class="mt-2 mb-4 text-muted">Searching Lazada and Shopee...</div>
+        <hr>
+        <canvas id="myChart"></canvas>
+    </div>
+
+{% endblock %}
+
+
+{% block jquery %}
+    <script>
+        endpoint = '/api/chart/data/';
+        $.ajax({
+            url: endpoint,
+            method: "GET",
+            data: {
+                labels: [],
+                shopee: [],
+                lazada: [],
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#comment').html('Search finished.');
+                labels = data.labels;
+                shopee = data.shopee;
+                lazada = data.lazada;
+                max_brands = data.max_brands;
+                setChart();
+                if (max_brands > myChart.options.scales.xAxes[0].ticks.max){
+                    myChart.options.scales.xAxes[0].ticks.max = max_brands;
+                    myChart.update();
+                }
+
+            },
+            error: function(error_data){
+            console.log("error");
+            console.log(error_data)
+            }
+        });
+
+        function setChart(){
+            ctx = document.getElementById('myChart');
+            myChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Shopee',
+                        data: shopee,
+                        backgroundColor: 'rgba(200, 240, 255)',
+                    },
+                    {
+                        label: 'Lazada',
+                        data: lazada,
+                        backgroundColor: 'rgba(50, 100, 170)',
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                           minBarLength: 2,
+                            ticks: {
+                                beginAtZero: true,
+                                min: 0,
+                                max: 25,
+                                callback: function(value) {
+                                    return value + "%"}
+                            },
+                        }],
+                        yAxes: [{
+                            minBarLength: 2,
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock jquery %}
