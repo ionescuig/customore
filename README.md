@@ -12,16 +12,12 @@ Technologies: python, django, beautifulsoup4, django-crispy-forms, django-debug-
 
 ##### Good:
 - Lazada.vn: works fine 
-- search for 100 products
+- search for custom number of products
 - ajax takes the results from api
-- the search is set for 100 products so it gives the results in percentages
 
 ##### Bad:
 - Shopee.vn: don't thing information is correct
-- search only for 100 products (model is prepared but not accessible in form)
-- the search model not connected to scraper: same results for any search
 
 ##### To do:
 - calculate the percentages for any number of requested items
-- create models for search results and give results through api
 - update results every second (I don't know if is possible with django)
