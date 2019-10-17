@@ -14,20 +14,37 @@ def get_brands(quote, results=100):
         yield item['brand']
 
 
-if __name__ == '__main__':
-    search = "lipstick"
-    items = 100
+def shopee_dict(quote, results=100):
+    """
+    returns a dictionary with brands and items per brand
+    and also total number of items found
+    (this number can be used for testing results)
+    """
 
     brands = {}
     total_items = 0
-    for brand in get_brands(search, items):
+    for brand in get_brands(quote, results):
         if brand in brands:
             brands[brand] += 1
         else:
             brands[brand] = 1
         total_items += 1
+    return brands, total_items
+
+
+if __name__ == '__main__':
+    """
+    Scraper for Shopee.vn
+    Scrape: share of search of all brands on the top 'X' results for a given quote
+    Takes 2 arguments: quote and number of results 
+    """
+    search_string = 'lipstick'
+    # search_string = 'son lì'
+    items = 100
+
+    brands_dict, number = shopee_dict(search_string, items)
 
     print('-' * 35)
-    print('Brands:\n' + str(brands))
-    print('Total items:', total_items)
+    print('Brands:\n' + str(brands_dict))
+    print('Total items:', items)
     print('-' * 35)

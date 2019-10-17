@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="col-lg-8 offset-lg-2 mt-4">
-        <form method="POST" class="form-inline">
+        <form method="POST">
             {% csrf_token %}
             <div class="font-weight-bold">{{ form|crispy }}</div>
             <input class="btn btn-primary m-2" type="submit" value="Search">

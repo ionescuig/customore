@@ -10,4 +10,4 @@ class QuoteForm(forms.ModelForm):
 
     class Meta:
         model = Quote
-        fields = ['quote']
+        fields = ['quote', 'results']

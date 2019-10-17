@@ -44,6 +44,10 @@ def get_brands(soup, results=40):
 
 
 def lazada(quote, results=100):
+    """
+    yields brands page by page (40 results per page)
+    """
+
     pages = results // 40
     results_remaining = results
 
@@ -55,21 +59,38 @@ def lazada(quote, results=100):
         results_remaining -= 40
 
 
-if __name__ == '__main__':
-    # search_string = 'lipstick'
-    search_string = 'son lì'
-    items = 100
+def lazada_dict(quote, results=100):
+    """
+    returns a dictionary with brands and items per brand
+    and also total number of items found
+    (this number can be used for testing results)
+    """
 
     brands = {}
     total_items = 0
-    for brand in lazada(search_string, items):
+    for brand in lazada(quote, results):
         if brand in brands:
             brands[brand] += 1
         else:
             brands[brand] = 1
         total_items += 1
+    return brands, total_items
+
+
+if __name__ == '__main__':
+    """
+    Scraper for Lazada.vn
+    Scrape: share of search of all brands on the top 'X' results for a given quote
+    Takes 2 arguments: quote and number of results 
+    """
+
+    # search_string = 'lipstick'
+    search_string = 'son lì'
+    items = 100
+
+    brands_dict, number = lazada_dict(search_string, items)
 
     print('-' * 35)
-    print('Brands:\n' + str(brands))
-    print('Total items:', total_items)
+    print('Brands:\n' + str(brands_dict))
+    print('Total items:', items)
     print('-' * 35)

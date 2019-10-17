@@ -4,14 +4,13 @@
 
 {% block content %}
     <div class="col-lg-8 offset-lg-2 mt-4">
+        <div id="comment" class="mb-1">Loading results...</div>
         <a class="btn btn-primary mt-2" href="{% url 'home' %}">Search Again</a>
-        <div id="comment" class="mt-2 mb-4 text-muted">Searching Lazada and Shopee...</div>
         <hr>
         <canvas id="myChart"></canvas>
     </div>
 
 {% endblock %}
-
 
 {% block jquery %}
     <script>
@@ -20,31 +19,50 @@
             url: endpoint,
             method: "GET",
             data: {
+                quote: '',
+                results: 0,
                 labels: [],
                 shopee: [],
                 lazada: [],
-                max_brands: 10,
+                items_shopee: 0,
+                items_lazada: 0,
             },
             dataType: 'json',
             success: function (data) {
-                $('#comment').html('Search finished.');
+                quote = data.quote;
+                results = data.results;
                 labels = data.labels;
                 shopee = data.shopee;
                 lazada = data.lazada;
+                items_shopee= data.items_shopee;
+                items_lazada= data.items_lazada;
                 max_brands = data.max_brands;
                 setChart();
-                if (max_brands > myChart.options.scales.xAxes[0].ticks.max){
+                if (max_brands > myChart.options.scales.xAxes[0].ticks.max) {
+                    if (max_brands % 5 > 0) {
+                        max_brands = max_brands - max_brands % 5 + 5
+                    }
                     myChart.options.scales.xAxes[0].ticks.max = max_brands;
                     myChart.update();
                 }
-
+                if (results > items_shopee) {
+                    $('#comment').html('Shopee.vn: scraping error.');
+                }
+                else if (results > items_lazada) {
+                    $('#comment').html('Lazada.vn: scraping error.');
+                }
+                else {
+                    $('#comment').html('Scraping complete.');
+                }
+                 if (results > items_shopee && results > items_lazada) {
+                    $('#comment').html('Scraping error. Please try again.');
+                }
             },
             error: function(error_data){
             console.log("error");
             console.log(error_data)
             }
         });
-
         function setChart(){
             ctx = document.getElementById('myChart');
             myChart = new Chart(ctx, {
